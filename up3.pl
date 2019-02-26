@@ -1,10 +1,11 @@
 #!/usr/bin/perl
-# version: 1.10
+# version: 1.11
 #
-# (c) Kristian Peters 2003-2009
+# (c) Kristian Peters 2003-2017
 # released under the terms of GPL
 #
-# changes: 1.10 - minor updates
+# changes: 1.11 - minor updates to keep up-to-date with perl and latest macOS
+#          1.10 - minor updates
 #          1.9 - little mac-fixes, new unicode umlaut changes
 #          1.8 - new roman algorithm, little additions, roman is now always true
 #          1.7 - roman numbers only via option
@@ -83,73 +84,40 @@ for (@ARGV) {
 	$_ =~ s/(\]|\})/\)/g;
 
 	# change umlauts
-	$_ =~ s/ä/ae/g;
-	$_ =~ s/ö/oe/g;
-	$_ =~ s/ü/ue/g;
+	$_ =~ s/Ã¤/ae/g;
+	$_ =~ s/Ã¶/oe/g;
+	$_ =~ s/Ã¼/ue/g;
 
-	$_ =~ s/Ä/Ae/g;
-	$_ =~ s/Ö/Oe/g;
-	$_ =~ s/Ü/Ue/g;
-
-	$_ =~ s/ß/ss/g;
-
-	# change special characters
-	$_ =~ s/(é|è|ê)/e/g;
-	$_ =~ s/(á|à|â|æ)/a/g;
-	$_ =~ s/(ó|ò|ô|ø)/o/g;
-	$_ =~ s/(ú|ù|û)/u/g;
-	$_ =~ s/(í|ì|î)/i/g;
-
-	$_ =~ s/(É|È|Ê|¤)/E/g;
-	$_ =~ s/(Á|À|Â|Æ)/A/g;
-	$_ =~ s/(Ó|Ò|Ô|Ø)/O/g;
-	$_ =~ s/(Ú|Ù|Û)/U/g;
-	$_ =~ s/(Í|Ì|Î)/I/g;
-
-	# change mac-umlauts
-	$_ =~ s/aÌˆ/ae/g;
-	$_ =~ s/oÌˆ/oe/g;
-	$_ =~ s/uÌˆ/ue/g;
-
-	$_ =~ s/AÌˆ/Ae/g;
-	$_ =~ s/OÌˆ/Oe/g;
-	$_ =~ s/UÌˆ/Ue/g;
+	$_ =~ s/Ã„/Ae/g;
+	$_ =~ s/Ã–/Oe/g;
+	$_ =~ s/Ãœ/Ue/g;
 
 	$_ =~ s/ÃŸ/ss/g;
+
+	# change special characters
+	$_ =~ s/(Ã©|Ã¨|Ãª)/e/g;
+	$_ =~ s/(Ã¡|Ã |Ã¢|Ã¦)/a/g;
+	$_ =~ s/(Ã³|Ã²|Ã´|Ã¸)/o/g;
+	$_ =~ s/(Ãº|Ã¹|Ã»)/u/g;
+	$_ =~ s/(Ã­|Ã¬|Ã®)/i/g;
+
+	$_ =~ s/(Ã‰|Ãˆ|ÃŠ|Â¤)/E/g;
+	$_ =~ s/(Ã|Ã€|Ã‚|Ã†)/A/g;
+	$_ =~ s/(Ã“|Ã’|Ã”|Ã˜)/O/g;
+	$_ =~ s/(Ãš|Ã™|Ã›)/U/g;
+	$_ =~ s/(Ã|ÃŒ|Ã)/I/g;
 	
-	# change unicode umlauts
-	$_ =~ s/(%e4|ai%88)/ae/g;
-	$_ =~ s/(%f6|oi%88)/oe/g;
-	$_ =~ s/(%fc|ui%88)/ue/g;
-	$_ =~ s/%c4/Ae/g;
-	$_ =~ s/%d6/Oe/g;
-	$_ =~ s/%dc/Ue/g;
-	$_ =~ s/%df/ss/g;
-
-	# change unicode characters
-	$_ =~ s/(%e0|%e1|%e2)/a/g;
-	$_ =~ s/(%e5|%e8|%e9|%ea|I%a3|a%80%9a)/e/g;
-	$_ =~ s/(%f2|%f3|%f4|%f8)/o/g;
-	$_ =~ s/(%b5|%f9|%fa|%fb)/u/g;
-	$_ =~ s/(%ec|%ed|%ee|i%83a%ad)/i/g;
-
-	$_ =~ s/%c5/A/g;
-	$_ =~ s/(%d8|Oi%88)/O/g;
-	$_ =~ s/%e7/c/g;
-	$_ =~ s/%c7/C/g;
-	$_ =~ s/%a5/Y/g;
-
-	$_ =~ s/(a|A)%80%93/-/g;
-	$_ =~ s/(i%81|i%83|%92|%98|A%80%8e)//g;
-
 	# other characters
 	$_ =~ s/~/-/g;
-	$_ =~ s/@/ at /g;
-	$_ =~ s/°/o/g;
-	$_ =~ s/ç/c/g;
+	$_ =~ s/@/ At /g;
+	$_ =~ s/Â°/o/g;
+	$_ =~ s/Ã§/c/g;
 
-	# remove bad characters
-	$_ =~ s/(\'|\"|!|,|#|´|\$|\=)//g;
+	# remove other characters
+	$_ =~ s/(\'|\"|!|,|#|Â´|\$|\=)//g;
+	
+	# remove remaining non-ascii characters
+	$_ =~ s/[^[:ascii:]]//g;
 
 	# remove double spaces
 	$_ =~ s/\ \ /\ /g;

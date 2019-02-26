@@ -1,10 +1,11 @@
 #!/bin/bash
-# version: 1.0
+# version: 1.1
 #
 # (c) Kristian Peters 2016-2017
 # released under the terms of GPL
 #
-# changes: 1.0 - initial release
+# changes: 1.1 - bugfix when there is more than one genre
+#          1.0 - initial release
 #
 # contact: <kristian@korseby.net>
 
@@ -51,7 +52,7 @@ function process() {
 		ARTIST=$(${METAFLAC} "$i" --show-tag=ARTIST | sed s/.*=//g)
 		TITLE=$(${METAFLAC} "$i" --show-tag=TITLE | sed s/.*=//g)
 		ALBUM=$(${METAFLAC} "$i" --show-tag=ALBUM | sed s/.*=//g)
-		GENRE=$(${METAFLAC} "$i" --show-tag=GENRE | sed s/.*=//g)
+		GENRE=$(${METAFLAC} "$i" --show-tag=GENRE | sed s/.*=//g | head -n 1)
 		TRACKNUMBER=$(${METAFLAC} "$i" --show-tag=TRACKNUMBER | sed s/.*=//g)
 		DATE=$(${METAFLAC} "$i" --show-tag=DATE | sed s/.*=//g)
 	
@@ -78,7 +79,7 @@ function process() {
 	done
 	
 	if [[ "${PARALLEL}" != "" ]]; then
-		${PARALLEL} --jobs ${PARALLEL_CORES} --delay 0 --arg-file ${TMPFILE}
+		${PARALLEL} --jobs ${PARALLEL_CORES} --will-cite --delay 0 --arg-file ${TMPFILE}
 	fi
 }
 
@@ -89,5 +90,4 @@ if [ "${1}" == "-h" ] || [ "${1}" == "--help" ] ; then
 else
 	process
 fi
-
 

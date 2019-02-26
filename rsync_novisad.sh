@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME="rsync_novisad"
-VERSION="1.9"
+VERSION="1.10"
 
 RSYNC="/opt/bin/rsync"
 USER="$(whoami)"
@@ -94,6 +94,9 @@ EXCLUDE="
 - /Caches/CloudKit
 - /Containers/com.apple.internetaccounts
 - /SyncedPreferences
+- /Library/Application Support/Ableton
+- /Library/Application Support/Helicon
+- /Library/Preferences/com.helicon*
 "
 
 
@@ -109,6 +112,11 @@ function help() {
 
 
 function process() {
+	if [[ "$USER" == "kristian" ]] || [[ "$USER" == "root" ]] ; then
+		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
+		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@novisad:/Users/kristian/"
+		fi
+	
 	if [[ "$USER" == "novisad" ]] || [[ "$USER" == "root" ]] ; then
 		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
 		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -p 22" "novisad@novisad:/Users/novisad/"

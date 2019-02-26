@@ -4,7 +4,7 @@ Over the years I have made lots of shell scripts to improve speed and easiness o
 
 
 ## Download
-Version: 4.9
+Version: 4.10
 
 - [Visit my homepage](https://www.korseby.net/computer/scripts/)
 - [Browse the releases](https://github.com/korseby/korseby-scripts/releases)
@@ -113,6 +113,11 @@ These are some scripts that convert mp3s to wav and backwards.
 
 
 ## Changes
+
+### Version 4.10:
+- up3.pl: minor updates to keep up-to-date with perl and latest macOS
+- flac2mp3.sh: bugfix when there is more than one genre
+- exifwiki.sh: now including GPS meta-data
 
 ### Version 4.9:
 - updated wav2mp3.sh to work in parallel

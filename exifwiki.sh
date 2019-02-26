@@ -26,6 +26,19 @@ for i in ${*}; do
 		-ExifIFD:ColorSpace \
 		-ExifIFD:ExposureMode \
 		-ExifIFD:WhiteBalance \
+		-Exif:GPSLatitudeRef \
+		-Exif:GPSLatitude \
+		-Exif:GPSLongitudeRef \
+		-Exif:GPSLongitude \
+		-Exif:GPSAltitudeRef \
+		-Exif:GPSAltitude \
+		-Exif:GPSImgDirectionRef \
+		-Exif:GPSImgDirection \
+		-Exif:GPSTimeStamp \
+		-Exif:GPSMapDatum \
+		-Exif:GPSDateStamp \
+		-Exif:GPSDifferential \
+		-Exif:GPSHPositioningError \
 		-Canon:MacroMode \
 		-Canon:Self-timer \
 		-Canon:Quality \

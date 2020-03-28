@@ -1,13 +1,13 @@
 #!/bin/sh
 
 NAME="rsync_novisad"
-VERSION="1.10"
+VERSION="1.11"
 
 RSYNC="/opt/bin/rsync"
+RSYNC_OPTIONS="--archive --xattrs --hard-links --acls --delete --delete-after --delete-excluded --ignore-errors --force-delete"
 USER="$(whoami)"
 
-IFS="
-"
+IFS=$'\n'
 
 EXCLUDE="
 - .DocumentRevisions-V100
@@ -114,17 +114,17 @@ function help() {
 function process() {
 	if [[ "$USER" == "kristian" ]] || [[ "$USER" == "root" ]] ; then
 		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@novisad:/Users/kristian/"
+		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list ${RSYNC_OPTIONS} --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@novisad:/Users/kristian/"
 		fi
 	
 	if [[ "$USER" == "novisad" ]] || [[ "$USER" == "root" ]] ; then
 		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -p 22" "novisad@novisad:/Users/novisad/"
+		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list ${RSYNC_OPTIONS} --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -p 22" "novisad@novisad:/Users/novisad/"
 		ssh -p 22 novisad@novisad /Users/novisad/Music/fix_traktor.sh	
 	fi
 	
 	if [[ "$USER" == "root" ]] ; then
-		${RSYNC} --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -p 22" "admin@novisad:/Applications/Zusatzprogramme/"
+		${RSYNC} ${RSYNC_OPTIONS} --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -p 22" "admin@novisad:/Applications/Zusatzprogramme/"
 	fi
 }
 
@@ -137,3 +137,5 @@ else
 	
 	rm -f /tmp/${NAME}_exclude.list
 fi
+
+

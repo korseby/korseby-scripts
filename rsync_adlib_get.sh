@@ -1,7 +1,7 @@
 #!/bin/sh
 
-NAME="rsync_novisad"
-VERSION="1.12"
+NAME="rsync_adlib_get"
+VERSION="1.14"
 
 RSYNC="/opt/bin/rsync"
 USER="$(whoami)"
@@ -58,7 +58,6 @@ EXCLUDE="
 - /Library/Keychains/
 - /Library/Logs/
 - /Library/Preferences/ByHost/
-- /Library/Application Support/Dock/desktoppicture.db
 - /Library/Preferences/com.apple.desktop.plist
 - /Library/Preferences/com.apple.recentitems.plist
 - /Library/Preferences/com.apple.loginitems.plist
@@ -96,10 +95,33 @@ EXCLUDE="
 - /Containers/com.apple.internetaccounts
 - /SyncedPreferences
 - /Library/Application Support/Ableton
-- /Library/Application Support/Helicon
-- /Library/Preferences/com.helicon*
 - /Library/Preferences/ThnkDev.QuickRes.plist
 - /Library/Caches/ThnkDev.QuickRes
+- /Library/Preferences/com.adobe.*
+- /Library/Preferences/com.Adobe.*
+- /Library/Cookies/com.adobe.*
+- /Library/WebKit/com.adobe.*
+- /Library/Preferences/Adobe*
+- /Library/Application Support/Adobe
+- /Library/Caches/com.adobe.*
+- /Library/Caches/Adobe
+- /Documents/Adobe
+- /Pictures/Lightroom
+- /Library/Application Support/Helicon
+- /Library/Application Support/HeliconFocus
+- /Library/Preferences/com.helicon.*
+- /Library/Preferences/com.heliconsoft.*
+- /Library/Preferences/com.HeliconSoft.*
+- /Library/Preferences/com.canon.*
+- /Library/Preferences/jp.co.canon.*
+- /Library/Application Support/Canon*
+"
+
+INCLUDE="
+#Library/Application Support/Adobe
+#Library/Application Support/Adobe/Lightroom/Develop Presets
+#Library/CameraRaw/Settings/User Presets
+#Pictures/Lightroom
 "
 
 
@@ -114,21 +136,19 @@ function help() {
 
 
 
-function process() {
+function process_get() {
 	if [[ "$USER" == "kristian" ]] || [[ "$USER" == "root" ]] ; then
-		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --hard-links --acls --delete --delete-after  --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@novisad:/Users/kristian/"
-		fi
-	
-	if [[ "$USER" == "novisad" ]] || [[ "$USER" == "root" ]] ; then
-		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --hard-links --acls --delete --delete-after  --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -p 22" "novisad@novisad:/Users/novisad/"
-		ssh -p 22 novisad@novisad /Users/novisad/Music/fix_traktor.sh	
-	fi
-	
-	if [[ "$USER" == "root" ]] ; then
-		${RSYNC} --archive --hard-links --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/Shared/Collection/ --rsh="ssh -p 22" "admin@novisad:/Users/Shared/Collection/"
-		${RSYNC} --archive --xattrs --hard-links --acls --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -p 22" "admin@novisad:/Applications/Zusatzprogramme/"
+		#${RSYNC} --archive --xattrs --acls --ignore-errors --delete --delete-after --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" 'kristian@adlib:/Users/kristian/Library/Preferences/com.adobe.*' '/Users/kristian/Library/Preferences/'
+		
+		#${RSYNC} --archive --xattrs --acls --ignore-errors --delete --delete-after --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" 'kristian@adlib:/Users/kristian/Library/Application\ Support/Adobe/Lightroom' '/Users/kristian/Library/Application Support/Adobe/'
+		
+		${RSYNC} --archive --xattrs --acls --ignore-errors --delete --delete-after --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" "kristian@10.12.6.98:/Users/kristian/Pictures/Lightroom" "/Users/kristian/Pictures/"
+		
+		${RSYNC} --archive --xattrs --acls --ignore-errors --delete --delete-after --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" "kristian@10.12.6.98:/Volumes/archive/___raw___" "/Volumes/archive/"
+		
+		${RSYNC} --archive --xattrs --acls --ignore-errors --delete --delete-after --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" "kristian@10.12.6.98:/Volumes/archive/___processing___" "/Volumes/archive/"
+		
+		#${RSYNC} --archive --xattrs --acls --ignore-errors --delete --delete-after --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" "kristian@10.12.6.98:/Volumes/archive/2023_Daten" "/Volumes/archive/"
 	fi
 }
 
@@ -137,9 +157,10 @@ function process() {
 if [ "${1}" == "--help" ] || [ "${1}" == "-help" ] || [ "${1}" == "-h" ] || [ "${1}" == "-?" ] ; then
 	help
 else
-	process
+	process_get
 	
 	rm -f /tmp/${NAME}_exclude.list
+	rm -f /tmp/${NAME}_include.list
 fi
 
 

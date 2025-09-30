@@ -1,10 +1,11 @@
 #!/bin/bash
-# version: 1.1
+# version: 1.2
 #
-# (c) Kristian Peters 2016-2017
+# (c) Kristian Peters 2016-2020
 # released under the terms of GPL
 #
-# changes: 1.1 - bugfix when there is more than one genre
+# changes: 1.2 - setting default min-bitrate to 320
+#          1.1 - bugfix when there is more than one genre
 #          1.0 - initial release
 #
 # contact: <kristian@korseby.net>
@@ -59,9 +60,9 @@ function process() {
 		# Output flac stream to lame
 		if [ "${1}" == "" ] ; then
 			if [[ "${PARALLEL}" != "" ]]; then
-				echo "${FLAC} -c -d \"$i\" | lame -h -v -V0 --add-id3v2 --pad-id3v2 --ignore-tag-errors --ta \"$ARTIST\" --tt \"$TITLE\" --tl \"$ALBUM\" --tg \"${GENRE:-12}\" --tn \"${TRACKNUMBER:-0}\" --ty \"$DATE\" - \"$OUTFILE\"" >> ${TMPFILE}
+				echo "${FLAC} -c -d \"$i\" | lame -h -v -V0 -b 320 --add-id3v2 --pad-id3v2 --ignore-tag-errors --ta \"$ARTIST\" --tt \"$TITLE\" --tl \"$ALBUM\" --tg \"${GENRE:-12}\" --tn \"${TRACKNUMBER:-0}\" --ty \"$DATE\" - \"$OUTFILE\"" >> ${TMPFILE}
 			else
-				${FLAC} -c -d "$i" | lame -h -v -V0 --add-id3v2 --pad-id3v2 --ignore-tag-errors --ta "$ARTIST" --tt "$TITLE" --tl "$ALBUM"  --tg "${GENRE:-12}" --tn "${TRACKNUMBER:-0}" --ty "$DATE" - "$OUTFILE"
+				${FLAC} -c -d "$i" | lame -h -v -V0 -b 320 --add-id3v2 --pad-id3v2 --ignore-tag-errors --ta "$ARTIST" --tt "$TITLE" --tl "$ALBUM"  --tg "${GENRE:-12}" --tn "${TRACKNUMBER:-0}" --ty "$DATE" - "$OUTFILE"
 			fi
 		elif [ "${2}" == "" ] ; then
 			if [[ "${PARALLEL}" != "" ]]; then

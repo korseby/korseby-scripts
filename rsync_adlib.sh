@@ -1,13 +1,12 @@
 #!/bin/sh
 
 NAME="rsync_adlib"
-VERSION="1.9"
+VERSION="1.12"
 
 RSYNC="/opt/bin/rsync"
 USER="$(whoami)"
 
-IFS="
-"
+IFS=$'\n'
 
 EXCLUDE="
 - .DocumentRevisions-V100
@@ -59,6 +58,7 @@ EXCLUDE="
 - /Library/Keychains/
 - /Library/Logs/
 - /Library/Preferences/ByHost/
+- /Library/Application Support/Dock/desktoppicture.db
 - /Library/Preferences/com.apple.desktop.plist
 - /Library/Preferences/com.apple.recentitems.plist
 - /Library/Preferences/com.apple.loginitems.plist
@@ -87,6 +87,7 @@ EXCLUDE="
 - /Library/Preferences/com.apple.cloudpaird.plist
 - /Library/Preferences/com.apple.icloud.*
 - /Library/Preferences/com.apple.security.cloudkeychainproxy3.*
+- /Library/Preferences/com.apple.dock.plist
 - /Library/Preferences/com.apple.ids.*
 - /Library/Application Support/iCloud
 - /Library/Caches/CloudKit
@@ -94,6 +95,27 @@ EXCLUDE="
 - /Caches/CloudKit
 - /Containers/com.apple.internetaccounts
 - /SyncedPreferences
+- /Library/Application Support/Ableton
+- /Library/Preferences/ThnkDev.QuickRes.plist
+- /Library/Caches/ThnkDev.QuickRes
+- /Library/Preferences/com.adobe.*
+- /Library/Preferences/com.Adobe.*
+- /Library/Cookies/com.adobe.*
+- /Library/WebKit/com.adobe.*
+- /Library/Preferences/Adobe*
+- /Library/Application Support/Adobe
+- /Library/Caches/com.adobe.*
+- /Library/Caches/Adobe*
+- /Documents/Adobe
+- /Pictures/Lightroom
+- /Library/Application Support/Helicon
+- /Library/Application Support/HeliconFocus
+- /Library/Preferences/com.helicon.*
+- /Library/Preferences/com.heliconsoft.*
+- /Library/Preferences/com.HeliconSoft.*
+- /Library/Preferences/com.canon.*
+- /Library/Preferences/jp.co.canon.*
+- /Library/Application Support/Canon*
 "
 
 
@@ -108,22 +130,21 @@ function help() {
 
 
 
-function process() {
+function process_put() {
 	if [[ "$USER" == "kristian" ]] || [[ "$USER" == "root" ]] ; then
 		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@adlib:/Users/kristian/"
-		
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Volumes/incoming/ --rsh="ssh -p 22" "kristian@adlib:/Volumes/incoming/"
+		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --hard-links --acls --delete --delete-after  --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -i ~/.ssh/id_rsa -p 22" "kristian@10.12.6.98:/Users/kristian/"
 	fi
 	
 	if [[ "$USER" == "novisad" ]] || [[ "$USER" == "root" ]] ; then
 		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -p 22" "novisad@adlib:/Users/novisad/"
-		ssh -p 22 novisad@adlib /Users/novisad/Music/fix_traktor.sh	
+		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --hard-links --acls --delete --delete-after  --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -i ~/.ssh/id_rsa -p 22" "novisad@10.12.6.98:/Users/novisad/"
+		ssh -p 22 novisad@10.12.6.98 /Users/novisad/Music/fix_traktor.sh	
 	fi
 	
 	if [[ "$USER" == "root" ]] ; then
-		${RSYNC} --archive --xattrs --acls --delete --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -p 22" "admin@adlib:/Applications/Zusatzprogramme/"
+		${RSYNC} --archive --hard-links --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/Shared/Collection/ --rsh="ssh -i ~/.ssh/id_rsa -p 22" "admin@10.12.6.98:/Users/Shared/Collection/"
+		${RSYNC} --archive --hard-links --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -i ~/.ssh/id_rsa -p 22" "admin@10.12.6.98:/Applications/Zusatzprogramme/"
 	fi
 }
 
@@ -132,7 +153,9 @@ function process() {
 if [ "${1}" == "--help" ] || [ "${1}" == "-help" ] || [ "${1}" == "-h" ] || [ "${1}" == "-?" ] ; then
 	help
 else
-	process
+	process_put
 	
 	rm -f /tmp/${NAME}_exclude.list
 fi
+
+

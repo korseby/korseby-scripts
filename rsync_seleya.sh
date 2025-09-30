@@ -1,10 +1,9 @@
 #!/bin/sh
 
 NAME="rsync_seleya"
-VERSION="1.11"
+VERSION="1.14"
 
 RSYNC="/opt/bin/rsync"
-RSYNC_OPTIONS="--archive --xattrs --hard-links --acls --delete --delete-after --delete-excluded --ignore-errors --force-delete"
 USER="$(whoami)"
 
 IFS=$'\n'
@@ -59,6 +58,8 @@ EXCLUDE="
 - /Library/Keychains/
 - /Library/Logs/
 - /Library/Preferences/ByHost/
+- /Library/Application Support/Dock/desktoppicture.db
+- /Library/Preferences/com.apple.dock.plist
 - /Library/Preferences/com.apple.desktop.plist
 - /Library/Preferences/com.apple.recentitems.plist
 - /Library/Preferences/com.apple.loginitems.plist
@@ -97,6 +98,8 @@ EXCLUDE="
 - /Library/Application Support/Ableton
 - /Library/Application Support/Helicon
 - /Library/Preferences/com.helicon*
+- /Library/Preferences/ThnkDev.QuickRes.plist
+- /Library/Caches/ThnkDev.QuickRes
 "
 
 
@@ -112,19 +115,20 @@ function help() {
 
 
 function process() {
-	if [[ "$USER" == "kristian" ]] || [[ "$USER" == "root" ]] ; then
-		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list ${RSYNC_OPTIONS} --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@seleya:/Users/kristian/"
-	fi
+	#if [[ "$USER" == "kristian" ]] || [[ "$USER" == "root" ]] ; then
+	#	echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
+	#	${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --hard-links --acls --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Users/kristian/ --rsh="ssh -p 22" "kristian@seleya:/Users/kristian/"
+	#fi
 	
 	if [[ "$USER" == "novisad" ]] || [[ "$USER" == "root" ]] ; then
 		echo "${EXCLUDE}" > /tmp/${NAME}_exclude.list
-		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list ${RSYNC_OPTIONS} --verbose --out-format="%o: %f (%b/%l)" /Users/novisad/ --rsh="ssh -p 22" "novisad@seleya:/Users/novisad/"
-		ssh -p 22 novisad@seleya /Users/novisad/Music/fix_traktor.sh	
+		${RSYNC} --exclude-from=/tmp/${NAME}_exclude.list --archive --xattrs --hard-links --acls --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" "novisad@seleya:/Users/novisad/" /Users/novisad/
+		ssh -p 22 novisad@localhost /Users/novisad/Music/fix_traktor.sh
 	fi
 	
 	if [[ "$USER" == "root" ]] ; then
-		${RSYNC} ${RSYNC_OPTIONS} --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -p 22" "admin@seleya:/Applications/Zusatzprogramme/"
+		${RSYNC} --archive --hard-links --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" --rsh="ssh -p 22" "admin@seleya:/Users/Shared/Collection/" /Users/Shared/Collection/
+		${RSYNC} --archive --xattrs --hard-links --acls --delete --delete-after --ignore-errors --force-delete --verbose --out-format="%o: %f (%b/%l)" /Applications/Zusatzprogramme/ --rsh="ssh -p 22" "admin@seleya:/Applications/Zusatzprogramme/"
 	fi
 }
 

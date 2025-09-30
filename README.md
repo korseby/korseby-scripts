@@ -4,7 +4,7 @@ Over the years I have made lots of shell scripts to improve speed and easiness o
 
 
 ## Download
-Version: 4.11
+Version: 4.12
 
 - [Visit my homepage](https://www.korseby.net/computer/scripts/)
 - [Browse the releases](https://github.com/korseby/korseby-scripts/releases)
@@ -44,6 +44,15 @@ These scripts do not fit into any category.
 
 ### share_file_http.sh
 - Start a webserver and share a file for download. 
+
+### imsort.sh
+- Rename all image files based on their creation dates.
+
+### imsort2.sh
+- Renames all image files with description in file name and associated xmp files based on their creation dates.
+
+### TIF2JPG.sh
+Convert all TIF to JPG files.
 
 
 
@@ -100,6 +109,21 @@ These are some scripts related to make the burning of CDs a lot easier.
 ## Scripts for Converting different file formats
 These are some scripts that convert mp3s to wav and backwards.
 
+### mp32wav.sh
+- creates a toc-file for a Audio CD.
+
+### wav2mp3.sh
+- encodes all wav-files found to mp3.
+
+### flac2mp3.sh
+- encodes all flac-files found to mp3.
+
+### flac2m4a.sh
+- encodes all flac-files found to m4a.
+
+### ape2wav.sh
+- converts ape files to wav.
+
 ### hls2mp4.sh
 - Converts a hls stream to mp4.
 
@@ -107,21 +131,28 @@ These are some scripts that convert mp3s to wav and backwards.
 - gets cover art out of mp3 and saves them as folder.jpg
 - needs perl extension MP3::Tag
 
-### mp32wav.sh
-- creates a toc-file for a Audio CD.
-
-### wav2mp3.sh
-- encodes all wav-files found to mp3.
-
 ### up3.pl
 - gives mp3-files a proper format.
 
 ### setid3tag.pl
 - sets id3 tags from mp3 files (not actively maintained at the moment) 
 
+### dpx2mov.sh
+- encodes Natron dpx projects to mov.
+
 
 
 ## Changes
+
+### Version 4.12:
+- added dpx2mov.sh
+- added flac2m4a.sh
+- flac2mp3.sh: setting default min bitrate to 320
+- added imsort.sh
+- added imsort2.sh
+- updated rsync_*.sh files
+- spleet_voice.sh: detecting frame rate correctly
+- added TIF2JPG.sh
 
 ### Version 4.11:
 - py3tag.py: added <a href="https://github.com/korseby/py3tag">py3tag script from github</a>
